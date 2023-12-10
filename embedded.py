@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from langchain.document_loaders.csv_loader import CSVLoader
 from langchain.embeddings.openai import OpenAIEmbeddings
-from vectordb import Config, ChromaConnectorFactory, ZillizConnectorFactory
+from vectordb import Config, ZillizConnectorFactory
 import os
 from dotenv import load_dotenv, find_dotenv
 
