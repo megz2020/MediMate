@@ -33,3 +33,13 @@ ZILLIZ_CLOUD_URI = YOUR_ZILLIZ_CLOUD_URI
 ZILLIZ_CLOUD_API_KEY = YOUR_ZILLIZ_CLOUD_API_KEY
 ``` 
 
+- run the 0_🏠MediMate.py file via the command line 
+```bash
+streamlit run 0_🏠MediMate.py
+```
+- upload google cloud credentials json file
+- upload an image of your prescription and wait for the results to be displayed
+- enjoy!
+
+
+
