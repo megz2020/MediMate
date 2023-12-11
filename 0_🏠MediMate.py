@@ -16,9 +16,13 @@ from dotenv import load_dotenv, find_dotenv
 from langchain.llms import VertexAI
 from langchain.vectorstores import Milvus
 from langchain.prompts.chat import HumanMessagePromptTemplate, ChatPromptTemplate
-
+#dummy key to solve error in streamlit sharing  :This app has encountered an error. The original error message is redacted to prevent data leaks. 
 os.environ['OPENAI_API_KEY'] = 'dummy_key'
-
+os.environ['ZILLIZ_CLOUD_URI'] = 'dummy_key'
+os.environ ['ZILLIZ_CLOUD_API_KEY'] = 'dummy_key'
+os.environ['PROCESSOR_PROJECT_ID'] = 'dummy_key'
+os.environ['PROCESSOR_LOCATION'] = 'dummy_key'
+os.environ['PROCESSOR_ID'] = 'dummy_key'
 load_dotenv(find_dotenv())
 
 
