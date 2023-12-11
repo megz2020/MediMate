@@ -4,6 +4,8 @@ Hackathon solution for lablab's TruEra Challenge: Build LLM Applications with Go
 ## screenshots
 ![image](https://github.com/megz2020/MediMate/blob/main/media/medimate1.png)
 ![image](https://github.com/megz2020/MediMate/blob/main/media/medimate2.png)
+![image](https://github.com/megz2020/MediMate/blob/main/media/app_arch.png)
+
 ## Inspiration
 MediMateAI is a cutting-edge tool designed to assist you in extracting essential information from your prescriptions. Utilizing artificial intelligence, it not only provides you with comprehensive details on the potential side effects of your medication but also alerts you to any possible conflicts between your current prescription and previous medications. Moreover, MediMateAI serves as a reminder to ensureyou take your medication as prescribed, helping you maintain a consistent schedule.Please note that this is a beta version, and while it offers valuable insights,it is not intended as a substitute for professional medical advice from your doctor Additionally, it is not yet ready for widespread use and should not be relied upon for predictive purposes.
 

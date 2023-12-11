@@ -257,7 +257,6 @@ elif google_cloud_credentials_uploader:
                     chain_recorder = TruChain(
                             chain, app_id="MediMate", feedbacks=[f_groundedness, f_qa_relevance, f_context_relevance, qa_relevance_open_ai])
                     with chain_recorder as recording:
-                        # llm_response = chain.run({"context":context, "query": query})
                         llm_response = chain({"context":context, "query": query})
                     prescription_medication["drugs_name"].append(key)
                     prescription_medication["number_of_times"].append(value)
