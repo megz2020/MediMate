@@ -17,6 +17,8 @@ from langchain.llms import VertexAI
 from langchain.vectorstores import Milvus
 from langchain.prompts.chat import HumanMessagePromptTemplate, ChatPromptTemplate
 
+os.environ['OPENAI_API_KEY'] = 'dummy_key'
+
 load_dotenv(find_dotenv())
 
 
