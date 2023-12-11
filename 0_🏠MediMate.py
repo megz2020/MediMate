@@ -10,12 +10,16 @@ from langchain.prompts import PromptTemplate
 
 import time
 import os
+import numpy as np
 from utils import save_uploaded_file
 from prescription_ocr import process_prescription, prescription_to_json
 from dotenv import load_dotenv, find_dotenv
 from langchain.llms import VertexAI
 from langchain.vectorstores import Milvus
 from langchain.prompts.chat import HumanMessagePromptTemplate, ChatPromptTemplate
+from trulens_eval import TruChain, Feedback, Tru, LiteLLM, Select, feedback
+from trulens_eval.feedback import Groundedness
+
 load_dotenv(find_dotenv())
 
 
@@ -85,6 +89,41 @@ st.session_state['Processor_Project_ID'] = os.environ.get('PROCESSOR_PROJECT_ID'
 st.session_state['Processor_Location'] = os.environ.get('PROCESSOR_LOCATION')
 st.session_state['Processor_ID'] = os.environ.get('PROCESSOR_ID')
 st.session_state['OpenAI_Key'] = os.environ.get('OPENAI_KEY')
+
+tru = Tru()
+
+litellm = LiteLLM(model_engine="chat-bison")
+
+openai = feedback.OpenAI()
+grounded = Groundedness(groundedness_provider=litellm)
+
+
+# Define a groundedness feedback function
+f_groundedness = (
+    Feedback(grounded.groundedness_measure_with_cot_reasons, name = "Groundedness")
+    .on(Select.RecordCalls.retrieve.rets.collect())
+    .on_output()
+    .aggregate(grounded.grounded_statements_aggregator)
+)
+
+# Question/answer relevance between overall question and answer.
+
+f_qa_relevance = (
+    Feedback(litellm.relevance_with_cot_reasons, name = "Answer Relevance")
+    .on(Select.RecordCalls.retrieve.args.query)
+    .on_output()
+)
+qa_relevance_open_ai = Feedback(openai.relevance).on_input_output()
+
+
+# Question/statement relevance between question and each context chunk.
+f_context_relevance = (
+    Feedback(litellm.qs_relevance_with_cot_reasons, name = "Context Relevance")
+    .on(Select.RecordCalls.retrieve.args.query)
+    .on(Select.RecordCalls.retrieve.rets.collect())
+    .aggregate(np.mean)
+)
+
 
 @st.cache_resource
 def get_config():
@@ -215,8 +254,11 @@ elif google_cloud_credentials_uploader:
 
                     chain = LLMChain(llm=llm, prompt=chat_prompt_template, verbose=True)
 
-
-                    llm_response = chain({"context":context, "query": query})
+                    chain_recorder = TruChain(
+                            chain, app_id="MediMate", feedbacks=[f_groundedness, f_qa_relevance, f_context_relevance, qa_relevance_open_ai])
+                    with chain_recorder as recording:
+                        # llm_response = chain.run({"context":context, "query": query})
+                        llm_response = chain({"context":context, "query": query})
                     prescription_medication["drugs_name"].append(key)
                     prescription_medication["number_of_times"].append(value)
                     prescription_medication["side_effects"].append(llm_response['text'])
@@ -275,4 +317,4 @@ elif google_cloud_credentials_uploader:
             for i in range(len(st.session_state['generated'])):
                 message(st.session_state["past"][i], is_user=True, key=str(i) + '_user')
                 message(st.session_state["generated"][i], key=str(i))
-        
+tru.run_dashboard()

@@ -1,0 +1,143 @@
+#app {
+    color: white;
+}
+
+body {
+/* background : #111111; */
+background-size: cover;
+/* Additional background styles if needed */
+}
+.rightBar-light {
+  position: fixed;
+  top: 40px;
+  right: 20px;
+ 
+}
+.rightBar-home {
+  position: fixed;
+  top: 150px;
+  right: 20px;
+ 
+}
+.rightBar-acccount {
+  position: fixed;
+  top: 200px;
+  right: 20px;
+}
+.rightBar-protofilo {
+  position: fixed;
+  top: 270px;
+  right: 20px;
+}
+.rightBar-contact {
+  position: fixed;
+  top: 340px;
+  right: 20px;
+}
+.rightBar .sti_container {
+    position: relative;
+  }
+.btn {
+    padding: 15px;
+    background-color: #2B2A2A;
+    cursor: pointer;
+    outline: none;
+    border: 0;
+    vertical-align: middle;
+    text-decoration: none;
+    color: #fff;
+    border-radius: 35px;
+    -webkit-transition: width 0.5s;
+    transition: width 0.5s;
+}
+.btn .btn-text {
+  max-width: 0;
+  display: inline-block;
+  -webkit-transition: color  max-width 1s;
+  transition: color .25s , max-width ;
+  vertical-align: top;
+  white-space: nowrap;
+  overflow: hidden;
+  color: rgb(255, 255, 255);
+}
+
+.btn:hover .btn-text {
+  max-width: 300px;
+  color: white;
+  
+
+}
+.btn:hover{
+
+  background-color: #f8af01;
+}
+.color-block {
+  height: 200%;
+  width: 100%;
+  transform: rotate(-15deg);
+  left: -83%;
+  top: -50%;
+  background: #ffb400;
+}
+
+.v-container {
+    width: 100%;
+    /* padding: 16px; */
+    margin-right: auto;
+    margin-left: auto;
+}
+.v-col-xxl, .v-col-xxl-auto, .v-col-xxl-12, .v-col-xxl-11, .v-col-xxl-10, .v-col-xxl-9, .v-col-xxl-8, .v-col-xxl-7, .v-col-xxl-6, .v-col-xxl-5, .v-col-xxl-4, .v-col-xxl-3, .v-col-xxl-2, .v-col-xxl-1, .v-col-xl, .v-col-xl-auto, .v-col-xl-12, .v-col-xl-11, .v-col-xl-10, .v-col-xl-9, .v-col-xl-8, .v-col-xl-7, .v-col-xl-6, .v-col-xl-5, .v-col-xl-4, .v-col-xl-3, .v-col-xl-2, .v-col-xl-1, .v-col-lg, .v-col-lg-auto, .v-col-lg-12, .v-col-lg-11, .v-col-lg-10, .v-col-lg-9, .v-col-lg-8, .v-col-lg-7, .v-col-lg-6, .v-col-lg-5, .v-col-lg-4, .v-col-lg-3, .v-col-lg-2, .v-col-lg-1, .v-col-md, .v-col-md-auto, .v-col-md-12, .v-col-md-11, .v-col-md-10, .v-col-md-9, .v-col-md-8, .v-col-md-7, .v-col-md-6, .v-col-md-5, .v-col-md-4, .v-col-md-3, .v-col-md-2, .v-col-md-1, .v-col-sm, .v-col-sm-auto, .v-col-sm-12, .v-col-sm-11, .v-col-sm-10, .v-col-sm-9, .v-col-sm-8, .v-col-sm-7, .v-col-sm-6, .v-col-sm-5, .v-col-sm-4, .v-col-sm-3, .v-col-sm-2, .v-col-sm-1, .v-col, .v-col-auto, .v-col-12, .v-col-11, .v-col-10, .v-col-9, .v-col-8, .v-col-7, .v-col-6, .v-col-5, .v-col-4, .v-col-3, .v-col-2, .v-col-1 {
+
+padding: 0px;
+}
+.info .title{
+  opacity: .8;
+  text-transform: capitalize;
+
+}
+.info .value{
+font-weight: 600;
+}
+
+.card-style{
+  padding: 20px 30px 25px 40px;
+  border-radius: 5px;
+  border: 1px solid #252525;
+  margin: 15px;
+}
+.card-style  h1 {
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  font-size: 50px;
+  font-weight: 700;
+  color: #f8af01;
+}
+.line-1 {
+  height: 2px;
+  width: 30px;
+  margin-top: 10px;
+  margin-left: 15px;
+  margin-right: 20px;
+  background: #777777;
+}
+.card-style .title{
+  max-width: 110px;
+  font-size: 15px;
+}
+.v-row   {
+  margin: 0px;
+}
+
+.txtPress-bg  h1{
+	color: #222;
+	font-family: 'Cinzel Decorative', cursive;
+	font-weight:600;
+	font-size: 70px;
+	text-transform: uppercase;
+	text-align:center;
+}
+.txtPress-bg  h1::selection {
+  color: #fff;
+  background-color: #CFA144;
+}

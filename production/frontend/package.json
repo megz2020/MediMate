@@ -1,0 +1,46 @@
+{
+  "name": "portfolio",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
+  "dependencies": {
+    "@fullcalendar/bootstrap": "^6.1.10",
+    "@fullcalendar/core": "^6.1.10",
+    "@fullcalendar/daygrid": "^6.1.10",
+    "@fullcalendar/interaction": "^6.1.10",
+    "@fullcalendar/list": "^6.1.10",
+    "@fullcalendar/timegrid": "^6.1.10",
+    "@fullcalendar/vue3": "^6.1.10",
+    "@mdi/font": "^7.2.96",
+    "@vuelidate/core": "^2.0.3",
+    "@vuelidate/validators": "^2.0.4",
+    "apexcharts": "^3.41.1",
+    "core-js": "^3.8.3",
+    "date-fns": "^2.30.0",
+    "moment": "^2.29.4",
+    "node-sass": "^9.0.0",
+    "sass-loader": "^13.3.2",
+    "sweetalert2": "^11.10.1",
+    "vue": "^3.3.10",
+    "vue-i18n": "^9.2.2",
+    "vue-router": "^4.0.3",
+    "vue3-apexcharts": "^1.4.4",
+    "vuetify": "^3.3.12",
+    "vuex": "^4.0.0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-router": "~5.0.0",
+    "@vue/cli-plugin-vuex": "~5.0.0",
+    "@vue/cli-service": "~5.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ]
+}
