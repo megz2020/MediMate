@@ -97,8 +97,8 @@ elif google_cloud_credentials_uploader:
         _embeddings,
         collection_name=_collection_name,
         connection_args={
-            "uri": zilliz_api_key,
-            "token": zilliz_uri,
+            "uri": zilliz_uri,
+            "token": zilliz_api_key,
             "secure": True,
         },
             )
