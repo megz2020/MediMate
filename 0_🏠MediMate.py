@@ -97,8 +97,8 @@ elif google_cloud_credentials_uploader:
         _embeddings,
         collection_name=_collection_name,
         connection_args={
-            "uri": os.environ.get("ZILLIZ_CLOUD_URI"),
-            "token": os.environ.get("ZILLIZ_CLOUD_API_KEY"),
+            "uri": zilliz_api_key,
+            "token": zilliz_uri,
             "secure": True,
         },
             )
