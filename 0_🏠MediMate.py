@@ -16,13 +16,6 @@ from dotenv import load_dotenv, find_dotenv
 from langchain.llms import VertexAI
 from langchain.vectorstores import Milvus
 from langchain.prompts.chat import HumanMessagePromptTemplate, ChatPromptTemplate
-#dummy key to solve error in streamlit sharing  :This app has encountered an error. The original error message is redacted to prevent data leaks. 
-os.environ['OPENAI_API_KEY'] = 'dummy_key'
-os.environ['ZILLIZ_CLOUD_URI'] = 'dummy_key'
-os.environ ['ZILLIZ_CLOUD_API_KEY'] = 'dummy_key'
-os.environ['PROCESSOR_PROJECT_ID'] = 'dummy_key'
-os.environ['PROCESSOR_LOCATION'] = 'dummy_key'
-os.environ['PROCESSOR_ID'] = 'dummy_key'
 load_dotenv(find_dotenv())
 
 
@@ -55,11 +48,37 @@ st.sidebar.markdown("""MediMateAI is a cutting-edge tool designed to assist you 
 st.sidebar.markdown('---')
 st.sidebar.title('Google Cloud')
 google_cloud_credentials_uploader =st.sidebar.file_uploader('Upload Google Cloud Credentials', type=['json'])
-use_env = st.sidebar.checkbox('Use environment variables', value=True)
+use_env = st.sidebar.checkbox('Use environment variables', value=False)
+st.sidebar.markdown('---')
+st.sidebar.title('Settings')
+st.sidebar.markdown('---')
+st.sidebar.title('OpenAI')
+openai_key = st.sidebar.text_input('OpenAI Key')
+st.sidebar.markdown('---')
+st.sidebar.title('Zilliz_URI')
+zilliz_uri = st.sidebar.text_input('Zilliz_URI')
+st.sidebar.markdown('---')
+st.sidebar.title('Zilliz_API_KEY')
+zilliz_api_key = st.sidebar.text_input('Zilliz_API_KEY')
+st.sidebar.markdown('---')
+st.sidebar.title('Processor_Project_ID')
+processor_project_id = st.sidebar.text_input('Processor_Project_ID')
+st.sidebar.markdown('---')
+st.sidebar.title('Processor_Location')
+processor_location = st.sidebar.text_input('Processor_Location')
+st.sidebar.markdown('---')
+st.sidebar.title('Processor_ID')
+processor_id = st.sidebar.text_input('Processor_ID')
+st.sidebar.markdown('---')
 
-if not google_cloud_credentials_uploader:
-    st.write('Please upload Google Cloud Credentials to continue')
+@st.cache_resource
+def get_config():
+    return zilliz_api_key, zilliz_uri, processor_project_id, processor_location, processor_id
+
+if not google_cloud_credentials_uploader or not openai_key or not zilliz_api_key or not zilliz_uri or not processor_project_id or not processor_location or not processor_id:
+    st.write('Please set up your environment variables and upload your Google Cloud Credentials')
 elif google_cloud_credentials_uploader:
+    zilliz_api_key, zilliz_uri, processor_project_id, processor_location, processor_id = get_config()
     google_cloud_credentials = os.path.join(os.getcwd(), google_cloud_credentials_uploader.name)
     save_uploaded_file(google_cloud_credentials_uploader, google_cloud_credentials)
 
@@ -84,7 +103,7 @@ elif google_cloud_credentials_uploader:
         },
             )
         return _db
-    
+    embeddings = OpenAIEmbeddings(openai_api_key=openai_key)
     credentials, llm = init_google_service_account_client(google_cloud_credentials)
 
     if use_env:
@@ -93,58 +112,31 @@ elif google_cloud_credentials_uploader:
         embeddings = OpenAIEmbeddings(openai_api_key=os.environ.get('OPENAI_API_KEY'))
         db = _init_db(embeddings)
 
-    else:
-        st.sidebar.markdown('---')
-        st.sidebar.title('Settings')
-        st.sidebar.markdown('---')
-        st.sidebar.title('OpenAI')
-        openai_key = st.sidebar.text_input('OpenAI Key')
-        st.sidebar.markdown('---')
-        st.sidebar.title('Zilliz_URI')
-        zilliz_uri = st.sidebar.text_input('Zilliz_URI')
-        st.sidebar.markdown('---')
-        st.sidebar.title('Zilliz_API_KEY')
-        zilliz_api_key = st.sidebar.text_input('Zilliz_API_KEY')
-        st.sidebar.markdown('---')
-        submit = st.sidebar.button('Submit')
+    db = _init_db(embeddings)
 
-        if submit:
-            st.write('Submitted')
-            if not openai_key:
-                openai_key = os.environ.get('OPENAI_KEY')
-            
-            if not zilliz_uri:
-                zilliz_uri = os.environ.get('ZILLIZ_CLOUD_URI')
-            if not zilliz_api_key:
-                zilliz_api_key = os.environ.get('ZILLIZ_CLOUD_API_KEY')
+    if 'messages' not in st.session_state:
+        st.session_state['messages'] = [
+            {"role": "system", "content": "Welcome to MediMateAi, Plese upload your prescription"}
+        ]
 
-        embeddings = OpenAIEmbeddings(openai_api_key=openai_key)
+    def generate_response(prompt, llm):
+        st.session_state['messages'].append({"role": "user", "content": prompt})
+        retrived_query = db.similarity_search(prompt)[0].page_content
+        context = "Question: " + prompt +\
+        "\n Answer: " + retrived_query
+        prompt = f"""Here is the context: {context}\
+                    Using the relevant information from the context,\
+                    provide an answer to the query: {prompt}."\
+                    If the context doesn't provide \
+                    any relevant information, \
+                    answer with \
+                    [I couldn't find a good match in the \
+                    document database for your query]
+                    """
 
-        db = _init_db(embeddings)
-
-        if 'messages' not in st.session_state:
-            st.session_state['messages'] = [
-                {"role": "system", "content": "Welcome to MediMateAi, Plese upload your prescription"}
-            ]
-
-        def generate_response(prompt, llm):
-            st.session_state['messages'].append({"role": "user", "content": prompt})
-            retrived_query = db.similarity_search(prompt)[0].page_content
-            context = "Question: " + prompt +\
-            "\n Answer: " + retrived_query
-            prompt = f"""Here is the context: {context}\
-                        Using the relevant information from the context,\
-                        provide an answer to the query: {prompt}."\
-                        If the context doesn't provide \
-                        any relevant information, \
-                        answer with \
-                        [I couldn't find a good match in the \
-                        document database for your query]
-                        """
-
-            response= llm(prompt)
-            st.session_state['messages'].append({"role": "assistant", "content": response})
-            return response
+        response= llm(prompt)
+        st.session_state['messages'].append({"role": "assistant", "content": response})
+        return response
     prescription = st.file_uploader("Upload your prescription", type=['png', 'jpg', 'jpeg', 'pdf'])
     enhanced_prescription = None
     if ("enhanced_message" not in st.session_state or prescription) and not enhanced_prescription:
