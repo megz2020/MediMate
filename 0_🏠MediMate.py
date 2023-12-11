@@ -48,34 +48,49 @@ st.sidebar.markdown("""MediMateAI is a cutting-edge tool designed to assist you 
 st.sidebar.markdown('---')
 st.sidebar.title('Google Cloud')
 google_cloud_credentials_uploader =st.sidebar.file_uploader('Upload Google Cloud Credentials', type=['json'])
-use_env = st.sidebar.checkbox('Use environment variables', value=False)
-st.sidebar.markdown('---')
-st.sidebar.title('Settings')
-st.sidebar.markdown('---')
-st.sidebar.title('OpenAI')
-openai_key = st.sidebar.text_input('OpenAI Key')
-st.sidebar.markdown('---')
-st.sidebar.title('Zilliz_URI')
-zilliz_uri = st.sidebar.text_input('Zilliz_URI')
-st.sidebar.markdown('---')
-st.sidebar.title('Zilliz_API_KEY')
-zilliz_api_key = st.sidebar.text_input('Zilliz_API_KEY')
-st.sidebar.markdown('---')
-st.sidebar.title('Processor_Project_ID')
-processor_project_id = st.sidebar.text_input('Processor_Project_ID')
-st.sidebar.markdown('---')
-st.sidebar.title('Processor_Location')
-processor_location = st.sidebar.text_input('Processor_Location')
-st.sidebar.markdown('---')
-st.sidebar.title('Processor_ID')
-processor_id = st.sidebar.text_input('Processor_ID')
-st.sidebar.markdown('---')
+use_env = st.sidebar.checkbox('Use environment variables', value=True)
+if not use_env:
+    st.sidebar.markdown('---')
+    st.sidebar.title('Settings')
+    st.sidebar.markdown('---')
+    st.sidebar.title('OpenAI')
+    openai_key = st.sidebar.text_input('OpenAI Key')
+    st.sidebar.markdown('---')
+    st.sidebar.title('Zilliz_URI')
+    zilliz_uri = st.sidebar.text_input('Zilliz_URI')
+    st.sidebar.markdown('---')
+    st.sidebar.title('Zilliz_API_KEY')
+    zilliz_api_key = st.sidebar.text_input('Zilliz_API_KEY')
+    st.sidebar.markdown('---')
+    st.sidebar.title('Processor_Project_ID')
+    processor_project_id = st.sidebar.text_input('Processor_Project_ID')
+    st.sidebar.markdown('---')
+    st.sidebar.title('Processor_Location')
+    processor_location = st.sidebar.text_input('Processor_Location')
+    st.sidebar.markdown('---')
+    st.sidebar.title('Processor_ID')
+    processor_id = st.sidebar.text_input('Processor_ID')
+    st.sidebar.markdown('---')
+    submit = st.sidebar.button('Submit')
+
+zilliz_api_key = os.environ.get('ZILLIZ_CLOUD_API_KEY')
+zilliz_uri = os.environ.get('ZILLIZ_CLOUD_URI')
+processor_project_id = os.environ.get('PROCESSOR_PROJECT_ID')
+processor_location = os.environ.get('PROCESSOR_LOCATION')
+processor_id = os.environ.get('PROCESSOR_ID')
+openai_key = os.environ.get('OPENAI_API_KEY')
+st.session_state['Zilliz_API_KEY'] = os.environ.get('ZILLIZ_CLOUD_API_KEY')
+st.session_state['Zilliz_URI'] = os.environ.get('ZILLIZ_CLOUD_URI')
+st.session_state['Processor_Project_ID'] = os.environ.get('PROCESSOR_PROJECT_ID')
+st.session_state['Processor_Location'] = os.environ.get('PROCESSOR_LOCATION')
+st.session_state['Processor_ID'] = os.environ.get('PROCESSOR_ID')
+st.session_state['OpenAI_Key'] = os.environ.get('OPENAI_KEY')
 
 @st.cache_resource
 def get_config():
     return zilliz_api_key, zilliz_uri, processor_project_id, processor_location, processor_id
 
-if not google_cloud_credentials_uploader or not openai_key or not zilliz_api_key or not zilliz_uri or not processor_project_id or not processor_location or not processor_id:
+if not google_cloud_credentials_uploader:
     st.write('Please set up your environment variables and upload your Google Cloud Credentials')
 elif google_cloud_credentials_uploader:
     zilliz_api_key, zilliz_uri, processor_project_id, processor_location, processor_id = get_config()
@@ -105,13 +120,6 @@ elif google_cloud_credentials_uploader:
         return _db
     embeddings = OpenAIEmbeddings(openai_api_key=openai_key)
     credentials, llm = init_google_service_account_client(google_cloud_credentials)
-
-    if use_env:
-        openai_key = os.getenv('OPENAI_KEY')
-        openai_key = os.getenv('OPENAI_KEY')
-        embeddings = OpenAIEmbeddings(openai_api_key=os.environ.get('OPENAI_API_KEY'))
-        db = _init_db(embeddings)
-
     db = _init_db(embeddings)
 
     if 'messages' not in st.session_state:
